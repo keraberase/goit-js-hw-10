@@ -14,8 +14,13 @@ import "izitoast/dist/css/iziToast.min.css";
 let countdownInterval;
 let isTimerStarted = false;
 const input = document.querySelector("input#datetime-picker")
+const daysDisplay = document.querySelector('[data-days]');
+const hoursDisplay = document.querySelector('[data-hours]');
+const minutesDisplay = document.querySelector('[data-minutes]');
+const secondsDisplay = document.querySelector('[data-seconds]');
+
 // використання бібліотеки flatpicker
-const options = flatpickr("#datetime-picker", {
+const options = {
     enableTime: true,
     time_24hr: true,
     defaultDate: new Date(),
@@ -36,7 +41,9 @@ const options = flatpickr("#datetime-picker", {
         }
     },
    
-});
+};
+
+flatpickr(input, options);
 
 
 const startBtn = document.querySelector('button[data-start]');
@@ -50,8 +57,7 @@ startBtn.addEventListener('click', function () {
 
 isTimerStarted = true;
 
-    const selectedDate = new Date(options.selectedDates[0]);
-    const countdownElement = document.querySelector('.timer');
+    const selectedDate = new Date(input.value);
 
     countdownInterval = setInterval(function () {
             const now = new Date();
@@ -59,17 +65,19 @@ isTimerStarted = true;
 
             if (timeDiff <= 0) {
                 clearInterval(countdownInterval);
-                document.querySelector('[data-days]').textContent = "00";
-                document.querySelector('[data-hours]').textContent = "00";
-                document.querySelector('[data-minutes]').textContent = "00";
-                document.querySelector('[data-seconds]').textContent = "00";
+                daysDisplay.textContent = "00";
+                hoursDisplay.textContent = "00";
+                minutesDisplay.textContent = "00";
+                secondsDisplay.textContent = "00";
+                isTimerStarted = false;
+            startBtn.disabled = true;
                 return;
             }
  const timeRemaining = convertMs(timeDiff);
-            document.querySelector('[data-days]').textContent = addLeadingZero(timeRemaining.days);
-            document.querySelector('[data-hours]').textContent = addLeadingZero(timeRemaining.hours);
-            document.querySelector('[data-minutes]').textContent = addLeadingZero(timeRemaining.minutes);
-            document.querySelector('[data-seconds]').textContent = addLeadingZero(timeRemaining.seconds);
+            daysDisplay.textContent = addLeadingZero(timeRemaining.days);
+            hoursDisplay.textContent = addLeadingZero(timeRemaining.hours);
+            minutesDisplay.textContent = addLeadingZero(timeRemaining.minutes);
+            secondsDisplay.textContent = addLeadingZero(timeRemaining.seconds);
         }, 1000);
 
         this.disabled = true;
